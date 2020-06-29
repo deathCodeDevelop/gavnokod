@@ -1,0 +1,183 @@
+#include <iostream>
+#include <Vector>
+#include <functional>
+using namespace std;
+
+typedef string stroka;
+
+const int size_platforms = 6;
+stroka platforms[size_platforms] = {
+	"pekarna",
+	"pustation",
+	"hboks",
+	"such",
+	"vita",
+	"vse",
+};
+
+const int size_rozraby = 8;
+stroka rozrabu[size_rozraby] =
+{
+	"prodavzugovna", // EA, ubisoft
+	"klapan",
+	"nitento",
+	"besezda",
+	"dogi",
+	"gavnokodbyedyard",
+	"mochank",
+	"kodzima",
+};
+
+const int size_ganr = 7;
+stroka ganru[size_ganr] = {
+	"hentai",
+	"anime",
+	"xxxedyardxxx",
+	"strelalka",
+	"kodzimalythsui",
+	"gonki",
+	"hboxeksklusive",
+};
+
+enum platformA {
+	pekarna,
+	pustation,
+	hboks,
+	such,
+	vita,
+	vse,
+};
+
+enum Rozraby {
+	prodavzugovna, // EA, ubisoft
+	klapan,
+	nitento,
+	besezda,
+	dogi,
+	gavnokodbyedyard,
+	mochank,
+	kodzima,
+};
+
+enum ganr {
+	hentai,
+	anime,
+	xxxedyardxxx,
+	strelalka,
+	kodzimalythsui,
+	gonki,
+	hboxeksklusive,
+};
+
+class game {
+public:
+	stroka _nazva;
+	Rozraby _rozrabu;
+	ganr _ganre;
+	platformA _platforma;
+	game(stroka nazva, size_t rozrabu, size_t ganre, size_t platforma) {
+		_nazva = nazva;
+		_rozrabu = Rozraby(rozrabu);
+		_ganre = ganr(ganre);
+		_platforma = platformA(platforma);
+	}
+	void pocazat() {
+		cout << _nazva << endl;
+		cout << rozrabu[_rozrabu] << endl;
+		cout << ganru[_ganre] << endl;
+		cout << platforms[_platforma] << endl;
+	}
+};
+
+void pocazatmenu() {
+	cout << "1.Show all games\n2.Filter games\n3.Search game\n4.Exit";
+}
+
+void showvse(vector<game>& basadannuh) {
+	for (size_t i = 0; i < basadannuh.size(); i++) {
+		basadannuh[i].pocazat();
+	}
+}
+
+void chek1(vector<game>& t, stroka s) {
+	for (size_t i = 0; i < t.size(); i++) {
+		if (s == rozrabu[size_t(t[i]._rozrabu)]) {
+			t[i].pocazat();
+		}
+	}
+}
+
+void chek2(vector<game>& t, stroka s) {
+	for (size_t i = 0; i < t.size(); i++) {
+		if (s == ganru[size_t(t[i]._ganre)]) {
+			t[i].pocazat();
+		}
+	}
+}
+
+void chek3(vector<game>& t, stroka s) {
+	for (size_t i = 0; i < t.size(); i++) {
+		if (s == platforms[size_t(t[i]._platforma)]) {
+			t[i].pocazat();
+		}
+	}
+}
+
+void sresh(function<void(vector<game>&, stroka)> t, vector<game>& data, string s) {
+	t(data, s);
+};
+
+void main() {
+	vector<game> basadannuh;
+	game vremennui1("maincrafte", 6, 4, 5);game vremennui2("sasasin", 0, 4, 2);game vremennui3("maincruft", 6, 4, 5);game vremennui4("horizont wylsa daun", 4, 1, 3);game vremennui5("posledniu z nas", 2, 2, 2);game vremennui6("tanki online", 1, 0, 0);
+	basadannuh.push_back(vremennui1); basadannuh.push_back(vremennui2); basadannuh.push_back(vremennui3); basadannuh.push_back(vremennui4); basadannuh.push_back(vremennui5); basadannuh.push_back(vremennui6);
+
+	do
+	{
+		int vubor;
+		/*showvse(basadannuh);*/
+		cout << "1.Show all games\n2.Filter games\n3.Search game\n4.Exit";
+		cout << "vvedu twiu vubor: ";
+		cin >> vubor;
+		system("cls");
+		if (vubor == 1) {
+			for (size_t i = 0; i < basadannuh.size(); i++) {
+				basadannuh[i].pocazat();
+			}
+		}
+		else if (vubor == 2) {
+			int vvod;
+			stroka enter;
+			cout << "vvedit filtr type 1 - ganre, 2 - rozrab, 3 - platforma: ";
+			cin >> vvod;
+			cout << "vvedit filtr: ";
+			cin >> enter;
+			if(vvod == 1){
+				function<void(vector<game>&, string)> t = chek1;
+				sresh(chek2, basadannuh, enter);
+			} else if(vvod == 2){
+				function<void(vector<game>&, string)> t = chek1;
+				sresh(chek1, basadannuh, enter);
+			}
+			else if (vvod == 3) {
+				function<void(vector<game>&, string)> t = chek1;
+				sresh(chek3, basadannuh, enter);
+			}
+		}
+		else if (vubor == 3){
+			stroka vvod;
+			cout << "vvedit nazvu: ";
+			cin >> vvod;
+			
+			for (size_t i = 0; i < basadannuh.size(); i++) {
+				if (basadannuh[i]._nazva == vvod) {
+					cout << "naideno" << endl;
+					basadannuh[i].pocazat();
+				}
+			}
+		}
+		else if (vubor == 4){
+			return;
+		}
+	} while (true);
+}
